@@ -1,0 +1,282 @@
+﻿<!DOCTYPE html>
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+ <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['table']});
+    </script>
+<html lang="en">
+
+    <head>
+        
+        <meta charset="utf-8" />
+        <title>Anthropometry</title>
+        <link rel="stylesheet" type="text/css" href="layout.css">
+        
+        <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    </head>
+
+    <body>
+        <!--<div class="container">-->
+
+ <div style="background-image: url(border.jpg); height: 100px" >
+ <h1>
+    Gestational Age Anthropometry
+  </h1>
+     </div>
+ <div id="myButton">
+ Live Birth: <input type="checkbox" id="livebirth">
+ </div>
+
+<div class="control-group">
+</div>
+<div class="control-group">
+</div>
+
+<div id="loginArea">
+<!--<button type="button" id="login" >Login</button>-->
+    <div id="removeLogin">
+    <button id="loginButton">Login</button> <br>
+    <a href="login.html" id="createLogin">Create an account.</a><br>
+        </div>
+    <div id="hiddenLogin" style="display: none ">
+        <form id="loginForm" >
+        UserId: <input type="text" id="userName" value=""> <br>
+        Password: <input type="password" id="password" value=""><br>
+        <button id="submitLogin">Login</button> 
+            <button id="exitLogin">Exit</button>
+        </form>
+        
+    </div>
+    <div id="loggedInCurrently" style="display: none">
+        <br>
+    <button id="logoutButton">Logout</button>
+    </div>
+</div>
+            
+<table id= "formTable" style="width: 80%">
+<tr>
+    
+    <td valign="top">
+<form name = "form1" id="form_1">
+<div id="removable" style ="border: 10px; border-bottom-style: groove; border-bottom-color: #ff6a00; display: block">
+    <div>
+Gestational Age (weeks): <input type="number" name="Gestational Age " id ="GA" value=" ">
+    </div>
+    
+</div>
+<div id="hiddenBlock" style ="border: 10px; border-bottom-style: groove; border-bottom-color: #ff6a00; display: none">
+    <div>
+    Age at Birth (weeks): <input type="number"  id ="AB" value=" " >
+        </div>
+    Weeks alive: <input type="number"  id ="WA" value=" " >
+    <p style="font-size: larger; text-align: center">OR</p>
+    <div>
+    Desired Age (months): <input type="number" id="Age" value="">
+    </div>
+</div>
+
+<div>
+Foot Length (mm): <input type="number" name="Foot Length" id ="FL" value=" ">
+</div>
+
+<div>
+Crown Rump (cm): <input type="number" name="Crown Rump" id="CR" value=" ">
+</div>
+
+<div>
+Crown Heel  (cm): <input type="number" name="Crown Heel" id="CH" value=" ">
+</div>
+
+<div>
+Head Circumference (cm): <input type="number" name="Head Circumference" id="HC"  value=" ">
+</div>
+
+<div>
+Chest Circumference (cm): <input type="number" name="Chest Circumference" id="CC" value=" ">
+</div>
+
+<div>
+Abdominal Circumference (cm): <input type="number" name="Abdominal Circumference" id="AC"  value=" ">
+</div>
+
+<div>
+Body Weight (g): <input type="number" name="Body Weight" id="bodyWeight"  value=" ">
+</div>
+
+<div>
+Brain Weight (g): <input type="number" name="Brain Weight" id="BW"  value=" ">
+</div>
+
+<div>
+Liver Weight (g): <input type="number" name="Liver Weight" id="LVW" value=" ">
+</div>
+
+<div>
+Lung Weight (g): <input type="number" name="Lung Weight" id="LUW"  value=" ">
+</div>
+
+<div>
+Heart Weight (g): <input type="number" name="Hear Weight" id="HW" value=" ">
+</div>
+
+<div>
+Thymus Weight (g): <input type="number" name="Thymus Weight" id="TW" value=" ">
+</div>
+
+<div>
+Spleen Weight (g): <input type="number" name="Spleen Weight" id="SW" value=" ">
+</div>
+
+<div>
+Kidneys Weight (g): <input type="number" name="Kidneys Weight" id="KW" value=" ">
+</div>
+
+<div>
+Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value=" ">
+</div>
+    
+</form>
+</td>
+   <td valign="top">
+   
+    <form id="form 2">
+ <div id="removable2">
+    Choose evaluation type: <select name="evaltype" id = "detAge">
+    <option value="None">None</option>
+    <option value="Foot Length">Foot Length</option>
+    <option value="Head Circumference">Head Circumference</option>
+    <option value="Body Weight">Body Weight</option>
+    <option value="Body Length">Body Length</option>
+    
+    </select>
+    <div>  
+    Degree of Maceration: <select name="evaltype" id = "maceration">
+    
+    <option value="None to mild">None to mild</option>
+    <option value="Moderate">Moderate</option>
+    <option value="Severe">Severe</option>
+    
+    </select>
+     </div>
+</div>
+<div  id="hiddenBlock2" style ="display: none">
+    Choose evaluation type: <select name="evaltype" id = "detAge2">
+    <option value="None">None</option>
+    <option value="Foot Length">Foot Length</option>
+    <option value="Head Circumference">Head Circumference</option>
+    <option value="Body Weight">Body Weight</option>
+    <option value="Body Length">Body Length</option>
+    
+    </select>
+</div>
+
+    <div>Gender: <select name="genders" id="gender">
+    <option value="male">Male</option>
+    <option value="female">Female</option>
+
+    </select></div>           
+
+        <div>Race: <select name="races" id="race">
+        <option value="white">White</option>
+        <option value="black">Black</option>
+        <option value="asian">Asian</option>
+        <option value="hispanic">Hispanic</option>
+        <option value="other">Other</option>
+        </select></div>
+
+    <div>
+    Disorder (ie: Heterotaxy, Down's): <input type="text" id="disorder" value="">
+    </div>
+    <div>
+        
+    Blood Culture: <input type="text" id="culture" value=""> 
+    </div>
+        <!--select boxes for gender, race and possible entry for disorderand cultures-->
+
+
+ </form> 
+    </td>
+    <td valign="top">
+<form id="form3" >
+    <!--
+<div id="accordion-resizer" class="ui-widget-content" style="height: fit-content">
+    -->
+    <div id="menu" >
+            <h4>Stillborn Directions</h4>
+            <div style="height: 300px">
+                <!--<p style="height: 300px"> </p> -->
+                <ol style="height: 300px">
+                    <li>Do not click the box for live born.</li>
+                    <li>Enter the estimated gestation age and available data on case.</li>
+                    <li>Depending on the selection to determine best fit, a value will need to be entered for that criteria.</li>
+                
+                
+                </ol>
+            
+            </div>
+            <h4>Live Born Directions</h4>
+            <div>
+                <ol>
+                <li>Select the box in the top left for live birth.</li>
+                <li>Enter values for either birth in weeks or age in months.</li>
+                <li>Age in months assumes months after birth (valid values < 12).</li>
+                <li>Enter available data for case infant.</li>
+                <li>Select option for determining best fit (drop down box in middle).  Foot length is not available for greater than 43 weeks or for children born after 37 weeks.</li>
+                <li>Click "Submit"</li>
+                </ol>
+            </div>
+            <h4>Storing Data</h4>
+            <div>
+                <ol>
+                <li>If you have an account, choose login. Otherwise, create an account.</li>
+                <li>After logging in, enter your data and click submit.</li>
+                <li>Once this action completes, you can choose to save your work to our database by clicking the save button.</li>
+                <li>A popup will be generated when the work has been saved.</li>
+                <li>Access data section will be completed later.</li>
+                </ol>
+            </div>
+            
+        </div>
+
+
+
+
+
+
+</form>
+        </td>
+  </tr>
+</table>
+ <br></br>
+ <input type="button" value="Submit" id ="submit" >
+        <input type="button" value="TestDB" id ="testDB" >
+<div id="legend">Key:</div>
+<div id= "yellowborder">Value outside normal range expected</div>
+<div id ="separator">    /    </div>
+<div id="redfont">Value outside range expected for body habitus found most compatible with case anthropometry</div>
+           
+<div id="table"></div>
+<br></br>
+<div>
+<textarea class="popup" id="report-output"></textarea>
+</div>
+
+<link rel='stylesheet' type='text/css' href='http://code.jquery.com/ui/1.9.1/themes/base/jquery-ui.css'/>
+          
+<!--<link rel='stylesheet' type="text/css" href="jquery-1.10.0.custom.css">-->
+
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="s3db-connectivity.js"></script>
+<script type="text/javascript" src="javaCode.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.9.1/jquery-ui.min.js"></script>
+
+</div>  
+
+ <div id = "footer">
+ <p>Posted by: Matthew Cain, MD; Ona Marie Faye-Petersen, MD; and Joseph Siebert, PhD</p>
+ 
+ </div> 
+ </body>
+
+   
+    
+</html>

@@ -1,0 +1,278 @@
+form {
+    
+fit-position: fill;    
+text-align: right;
+font-family: Verdana;
+//width: 400px;
+width: auto;
+font-size: large;  
+border-style:solid;
+border-width:5px; 
+background-color : white;
+}
+/*added the below table statement*/
+
+#logoutButton, #loginButton {
+   border: none;
+    display: inline;
+    margin: 0em;
+    padding: 0em;
+    outline: none;
+    outline-offset: 0em;
+    /* Look like a link */
+    background: none;
+    color: blue;
+    cursor: pointer;
+    font: inherit;
+    text-decoration: underline;
+}
+
+#loggedInCurrently, #loginArea{
+ font-size: large ;   
+ position: absolute;
+ top: 5%;
+ left: 55%;
+}
+
+
+#loginForm{
+ 
+    
+    z-index: 2;
+    border-color: black;
+    border-width: 5px;
+    background-color: #ddd8d8;
+    text-align: left ;
+}
+#form3 {
+text-align: left;
+border: none;
+word-wrap: normal;
+width: 500px;    
+/*/min-width: 300px;    
+max-width: 400px;
+    */
+/*was previously 500 px set*/
+}
+
+#myButton{
+font-size: x-large;
+display:  inline-block;
+   
+}
+
+
+
+h1{
+   
+   color: black;
+   font-family: 'Baskerville Old Face';
+   font-size: xx-large;
+}
+
+head h2,h3{
+   color: black;
+   font-family: 'Baskerville Old Face';
+   font-size: xx-large;
+}
+
+#menu{
+    
+    //border-width: thick;
+    //border-color: orange;
+    //-moz-appearance: -moz-win-glass;
+    
+    //background-color: #b2a6a6;
+}
+h4{
+    
+}
+
+
+body{
+
+//background-image:url('bodyBackground.jpg');
+background-color: #f7f4f4;
+
+//background-size: 100% auto;
+
+
+}   
+
+#legend{
+    padding-left:2cm;
+    display: inline-block;
+    font-style:  normal;
+    //color: white;
+}
+
+#yellowborder{
+    display: inline-block;
+    border: 3px solid gold;
+}
+
+#separator{
+    padding: 10px;
+    display: inline-block;
+    font-style:  normal;
+    //color: white;
+}
+
+#redfont{
+    font-style: italic;
+    display: inline-block;
+    color: red;
+}
+
+form_1.label{
+    
+display: inline-block;
+       
+//float: left;
+    
+//clear: left;
+    
+//width: 250px;
+    
+text-align: 
+left;
+}
+
+
+
+.button{
+   
+ text-align: right;
+
+
+.clear { clear: both; height: 0; line-height: 0; }
+.floatright { float: right; }
+}
+
+
+
+
+
+input {
+  
+//display: inline-block;
+  
+//float: right; 
+  
+//text-align: right;
+ 
+ //float: center;
+  
+//float: left;
+   
+ //width: 250px;
+}
+
+
+.popup {
+ /*
+    This class is used for the lightbox effect.
+ */
+ 
+ /*  
+    display: none;
+    height: 82%;
+    left: 30%;
+    
+    //left: 19%;
+    padding: 1ex;
+    position: fixed;
+    top: 10%;
+    
+    z-index: 1;
+ */ 
+  height: 400px;
+  font-size: large;
+  width: 44%;
+  display: none;
+  border: 3px solid black;
+}
+
+
+
+  .bold-green-font {
+    font-weight: bold;
+    color: green;
+  }
+
+  .bold-font {
+    font-weight: bold;
+  }
+
+  .right-text {
+    text-align: right;
+  }
+
+  .left-text {
+    text-align: left;
+  }
+
+  .small-width {
+    width: 62%;
+  }
+  .large-font {
+    font-size: 15px;
+  }
+
+  .italic-darkblue-font {
+    font-style: italic;
+    color: darkblue;
+  }
+
+  .italic-purple-font {
+    font-style: italic;
+    color: purple;
+  }
+ .italic-red-font {
+    font-style: italic;
+    color: red;
+  }
+
+  .underline-blue-font {
+    text-decoration: underline;
+    color: blue;
+  }
+
+  .gold-border {
+    border: 3px solid gold;
+  }
+
+  .red-border {
+    border: 3px solid red;
+  }
+
+.yellow-border {
+    border: 3px solid yellow;
+  }
+  .orange-background {
+    background-color: orange;
+  }
+
+  .orchid-background {
+    background-color: orchid;
+  }
+
+  .beige-background {
+    background-color: beige;
+  }
+
+/*
+.ui-widget-overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+
+.ui-accordion .ui-accordion-header { display: block; cursor: pointer; position: relative; margin-top: 2px; padding: .5em .5em .5em .7em; zoom: 1; }
+.ui-accordion .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-noicons { padding-left: .7em; }
+.ui-accordion .ui-accordion-icons .ui-accordion-icons { padding-left: 2.2em; }
+.ui-accordion .ui-accordion-header .ui-accordion-header-icon { position: absolute; left: .5em; top: 50%; margin-top: -8px; }
+.ui-accordion .ui-accordion-content { padding: 1em 2.2em; border-top: 0; overflow: auto; zoom: 1; }
+
+.ui-autocomplete {
+	position: absolute;
+	top: 0; /* #8656 */
+/**/
+
