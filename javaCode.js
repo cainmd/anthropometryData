@@ -58,7 +58,7 @@ var currentRange;
 var temp = 43;
 
 var submit = document.getElementById("submit");
-var testDB = document.getElementById("testDB");
+var saveResults = document.getElementById("saveResults");
 var loginButton = document.getElementById("loginButton");
 var submitLogin = document.getElementById("submitLogin");
 var logoutButton = document.getElementById("logoutButton");
@@ -525,8 +525,13 @@ $(document).ready(function () {
     //help boxes
     //localStorage.setItem("user", user);
     if (localStorage.getItem("key") != null) {
-        var key = localStorage.getItem("key");
-        s3dbc.setKey(key);
+        //var key = localStorage.getItem("key");
+        //s3dbc.setKey(key);
+        //added 1/31
+          //  $('#removeLogin').fadeOut('fast');
+          //  $('#hiddenLogin').fadeOut('fast');
+          //  $('#loggedInCurrently').fadeTo('fast', 1);
+
     }
 
     $("#menu").accordion({ collapsible: true, active: false });
@@ -552,14 +557,14 @@ lvBirth.onclick = function () {
 
     }
 };
-
-submit.onclick = function(){resetUse ()};
-testDB.onclick = function () { testmyDB() };
-loginButton.onclick = function () { loadLoginForm() };
 submitLogin.onclick = function () {
     loginUser();
     return false;
 };
+submit.onclick = function(){resetUse ()};
+saveResults.onclick = function () { testmyDB() };
+loginButton.onclick = function () { loadLoginForm() };
+
 logoutButton.onclick = function () { logoutProc();  }
 //resetUse()
 
