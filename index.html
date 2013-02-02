@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
  <script type="text/javascript">
       google.load('visualization', '1', {packages: ['table']});
@@ -248,12 +248,15 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
 </table>
  <br></br>
  <input type="button" value="Submit" id ="submit" >
-        <input type="button" value="TestDB" id ="testDB" >
-<div id="legend">Key:</div>
+        <input type="button" value="Save Results" id ="saveResults" >
+        <!-- need to have a way to easily tab this over and include bullets -->
+<div id="legend">Key:</div> 
 <div id= "yellowborder">Value outside normal range expected</div>
 <div id ="separator">    /    </div>
 <div id="redfont">Value outside range expected for body habitus found most compatible with case anthropometry</div>
-           
+ <br>
+        <p style="padding-left:6.4cm;">"NaN" stands for "not a number" and indicates a value does not exist for the given parameter.</p>    
+            
 <div id="table"></div>
 <br></br>
 <div>
@@ -272,7 +275,7 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
 </div>  
 
  <div id = "footer">
- <p>Posted by: Matthew Cain, MD, Jonas Almeida, PhD, and Ona Marie Faye-Petersen, MD</p>
+ <p>Posted by: Matthew Cain, MD; Jonas Almeida, PhD; and Ona Marie Faye-Petersen, MD</p>
  
  </div> 
  </body>
