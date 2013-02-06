@@ -47,6 +47,8 @@ var useDet;
 var detEntry;
 var rangeMeas;
 
+var cleaned = false;
+
 var form1 = document.getElementById("form1");
 
 
@@ -56,18 +58,24 @@ var GAA;
 var detAge;
 var currentRange;
 var temp = 43;
+var tiny = false;
+
+//buttons
 
 var submit = document.getElementById("submit");
-var testDB = document.getElementById("testDB");
+var saveResults = document.getElementById("saveResults");
 var loginButton = document.getElementById("loginButton");
 var submitLogin = document.getElementById("submitLogin");
 var logoutButton = document.getElementById("logoutButton");
 
+//checkboes
+
 var lvBirth = document.getElementById("livebirth");
+var cleanReport = document.getElementById("cleanReport");
 //add GA to document
 var GA = document.getElementById("GA");
 var age = document.getElementById("Age");
-//GA = parseInt(GA.value);
+
 
 var FL = document.getElementById("FL");
 var CR = document.getElementById("CR");
@@ -88,7 +96,7 @@ var AW = document.getElementById("AW");
 var AB = document.getElementById("AB");
 var WA = document.getElementById("WA");
 
-
+var caseNumber = document.getElementById("caseNumber");
 
 
 var removable = document.getElementById("removable");
@@ -99,22 +107,15 @@ var removable2 = document.getElementById("removable2");
 
 
 
-//var t = document.getElementById("maceration");
-//var maceration = document.getElementById("maceration").options[t].value;
-
-//var maceration = document.getElementById('maceration').selectedIndex;
-
 //select box values below
 
 var mac = document.getElementById("maceration");
-
-
 var gend = document.getElementById("gender");
 var rac = document.getElementById("race");
 var gender;
 var race;
 
-//this will be local for stillborns
+//
 var labels = ["Foot Length (mm)", "Crown Rump Length (cm)", "Crown Heel Length (cm)", "Head Circumference (cm)", "Chest Circumference (cm)", "Abdominal Circumference (cm)", "Body Weight (g)", "Brain Weight (g)", 
 "Liver Weight (g)", "Lung Weight (g)", "Heart Weight (g)", "Thymus Weight (g)", "Spleen Weight (g)", "Kidney Weight (g)", "Adrenal Weight (g)"];
 
@@ -525,8 +526,13 @@ $(document).ready(function () {
     //help boxes
     //localStorage.setItem("user", user);
     if (localStorage.getItem("key") != null) {
-        var key = localStorage.getItem("key");
-        s3dbc.setKey(key);
+        //var key = localStorage.getItem("key");
+        //s3dbc.setKey(key);
+        //added 1/31
+          //  $('#removeLogin').fadeOut('fast');
+          //  $('#hiddenLogin').fadeOut('fast');
+          //  $('#loggedInCurrently').fadeTo('fast', 1);
+
     }
 
     $("#menu").accordion({ collapsible: true, active: false });
@@ -553,13 +559,20 @@ lvBirth.onclick = function () {
     }
 };
 
-submit.onclick = function(){resetUse ()};
-testDB.onclick = function () { testmyDB() };
-loginButton.onclick = function () { loadLoginForm() };
+cleanReport.onclick = function () {
+    if (cleaned == true) {
+        cleaned = false;
+    }
+    else { cleaned = true; }
+}
 submitLogin.onclick = function () {
     loginUser();
     return false;
 };
+submit.onclick = function(){resetUse ()};
+saveResults.onclick = function () { testmyDB() };
+loginButton.onclick = function () { loadLoginForm() };
+
 logoutButton.onclick = function () { logoutProc();  }
 //resetUse()
 
@@ -571,7 +584,7 @@ logoutButton.onclick = function () { logoutProc();  }
 var useGA = function (valGA) {
 
     //first convert input in terms of table ... add an M and search
- 
+
     //ex: GA 35 so use M35 values, if out of range because larger, then use ++ and add M
 
     //debating on global for current mean or limit scope; make sure body weight entry too
@@ -585,18 +598,18 @@ var useGA = function (valGA) {
 
 
     // store my initial guess at GA
-    
+
     //for (var i = 0; i < actualRange.length ; i++) { alert(actualRange[i]) };
     //for (var i = 0; i < 4; i++) { alert(actualRange[i]) };
     //alert(GA.value)
 
     //will have correction in later function
-
-    expectedRange = [dataTable["M" + GA.value], dataTable["SD" + GA.value]];
-
+    if (tiny == false) {
+        expectedRange = [dataTable["M" + GA.value], dataTable["SD" + GA.value]];
+    }
     //need a way to determine schulz vs Maroun
-    if (liveBorn == false || detAge == "Foot Length") {
-       
+    if (liveBorn == false || detAge == "Foot Length" || tiny == true) {
+
         rangeMeas = calcTwoSD(gaM, gaSD, useDet, 0);
     }
     else {
@@ -608,7 +621,7 @@ var useGA = function (valGA) {
                 rangeMeas = [preemieWT[gaM][0], preemieWT[gaM][2]];
                 break;
             case "Head Circumference":
-                rangeMeas= [preemieHC[gaM][0], preemieHC[gaM][2]];
+                rangeMeas = [preemieHC[gaM][0], preemieHC[gaM][2]];
                 break;
         }
 
@@ -616,7 +629,7 @@ var useGA = function (valGA) {
     if (detAge != "None") {
         detInRange(rangeMeas, gaM, gaSD);
     }
-    
+
 
 
     //}
@@ -767,7 +780,7 @@ var calcTwoSD = function (myMean, mySD, index, tableID) {
 
 var detInRange = function (rangeMeas, myMean, mySD) {
     //I WILL catch stuff >43....
-      
+
     //choose either FL or body weight with an additional variable...
     //will add each time to GA until found, call useGA each time.
 
@@ -780,7 +793,7 @@ var detInRange = function (rangeMeas, myMean, mySD) {
 
     //AB.value < 37
     if (liveBorn == false || AB.value <= 43 && GAA < 99) {
-       
+
         if (detEntry > rangeMeas[1] && GAA < 43) {
 
             GAA++;
@@ -809,14 +822,18 @@ var detInRange = function (rangeMeas, myMean, mySD) {
             }
 
             else if (liveBorn == false && detEntry > rangeMeas[1] && GAA >= 43) {
+
+                alert("The values you entered appear compatible with birth values, was this a live birth? If so, click the box in the top left corner.")
+
                 stop();
             }
 
 
             //had else corrected Range here
-            else { 
-           
-            correctedRange = [dataTable[myMean], dataTable[mySD]]; }
+            else {
+
+                correctedRange = [dataTable[myMean], dataTable[mySD]];
+            }
             //need to make between 12 and 43
 
             //generate_report();
@@ -825,7 +842,7 @@ var detInRange = function (rangeMeas, myMean, mySD) {
     }
 
     else if (GAA >= 99) {
-        
+
         //for LIVE infants
         var jumper = 0;
         //stop();
@@ -840,7 +857,7 @@ var detInRange = function (rangeMeas, myMean, mySD) {
                 useLive(lvAge, 1);
             }
             else {
-               
+
                 temp = 999;
                 lvAge++;
                 useLive(lvAge, 1);
@@ -855,21 +872,25 @@ var detInRange = function (rangeMeas, myMean, mySD) {
             }
             else {
                 //will need to roll to useGA
+                tiny = true;
+                GA.value = 43;
+                GAA = 43;
+                useGA(GAA, 0);
                 alert("This infant has a size smaller than most live borns");
-                stop();
+                //stop();
             }
         }
 
 
         else {
-          
+
             /*
             for (i = 0; i <= 14; i++) {
             correctedRange[0][i] = NaN;
             correctedRange[1][i] = NaN;
             };
             */
-             
+
             correctedRange = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]];
 
@@ -890,10 +911,10 @@ var detInRange = function (rangeMeas, myMean, mySD) {
             // correctedRange = [liveBirth[myMean], liveBirth[mySD]];
             //generate_report();
         }
-       
+
     };
 
-    
+
 
     //iterations = iterations + 1;
 
@@ -916,6 +937,7 @@ var resetUse = function () {
     race = rac.options[rac.selectedIndex].value;
     //var maceration = mac.options[mac.selectedIndex].value;
 
+    checkValues();
 
     if (liveBorn == false) {
         var detA = document.getElementById('detAge');
@@ -929,7 +951,7 @@ var resetUse = function () {
 
             //stop evil negatives!!
 
-            checkValues();
+
 
             useGA(GAA);
         }
@@ -985,6 +1007,7 @@ var resetUse = function () {
                     //problem is its percentiles not SD!!!
 
                     //merges new tables!!
+
                     if (GAA < 99) {
                         pullPercentiles(0, GA.value, GAA);
                     }
@@ -1070,7 +1093,13 @@ var resetUse = function () {
                 lvAge = age.value;
 
                 useLive(lvAge, 0);
-                pullPercentiles(1, age.value, lvAge);
+                if (tiny == false) {
+                    pullPercentiles(1, age.value, lvAge);
+                }
+                else {
+                    pullPercentiles(1, age.value, age.value);
+                }
+
             };
             //can use a correction for <43wks and substitute the values
 
@@ -1101,9 +1130,9 @@ var resetUse = function () {
 
 var stop = function () {
     //This is used when > 43 weeks
-    if (liveBorn == false) {
-        alert("The values you entered appear compatible with birth values, was this a live birth? If so, click the box in the top left corner.")
-    }
+    //if (liveBorn == false) {
+      //  alert("The values you entered appear compatible with birth values, was this a live birth? If so, click the box in the top left corner.")
+   // }
 };
 
 
@@ -1190,13 +1219,37 @@ var defineAgeParams = function (detAge) {
 
 
  var checkValues = function () {
+     if (liveBorn == false && (GA.value > 43 || GA.value < 12)) {
+         alert("Enter a value between 12 and 43 weeks")
+         GA.style.background = "yellow";
+         stop();
+     }
+     else if (liveBorn == true) {
+         if (age.value > 12 || age.value <= 0) {
+             alert("Range only goes to 12 months, cannot process this value. If you entered 0, please enter values in weeks using above entries.")
+             age.style.background = "yellow";
+             stop();
+         }
+         if (AB.value > 43) {
+             alert("Please convert to months (adding in time alive).  This needs to be less than 12 months")
+             AB.style.background = "yellow";
+             stop();
+         }
+
+     }
 
      for (var i = 0; i < labels.length; i++) {
 
+         if (actualRange[i] < 0) {
+             alert("A negative value or text has been entered and is not valid")
+             //actualRange[i] = 0;
+             
+             stop();
+         }
          //if (actualRange[i] === undefined  || actualRange[i] <= 0) {
-           //actualRange[i] = "No Entry";
+         //actualRange[i] = "No Entry";
          //}
-       
+
      }
  }
 
@@ -1210,19 +1263,28 @@ var defineAgeParams = function (detAge) {
      //   return;
      //}
      generate_expected();
-     if (detAge != "None" && (GAA != GA.value && age.value != lvAge) ) {
-       // alert (age.value +" " + lvAge)
+     if (detAge != "None" && (GAA != GA.value && age.value != lvAge)) {
+         // alert (age.value +" " + lvAge)
+         generate_corrected();
+         document.getElementById('report-output').style.height = "400px";
+     };
+     if (tiny == true) {
+         // alert (age.value +" " + lvAge)
+         alert ("here")
          generate_corrected();
          document.getElementById('report-output').style.height = "400px";
      }
      //Need option to hide empty values
-     if (GAA <=99){
-     $('#report-output').text("The expected measurements for:" + " " + GA.value + " " + "weeks" + "\r\n" + textString);
-     }
-     else if (GAA > 99){
+     if (tiny == true) {
          $('#report-output').text("The expected measurements for:" + " " + age.value + " " + "months" + "\r\n" + textString);
      }
-    
+     else if (GAA <= 99) {
+         $('#report-output').text("The expected measurements for:" + " " + GA.value + " " + "weeks" + "\r\n" + textString);
+     }
+     else if (GAA > 99) {
+         $('#report-output').text("The expected measurements for:" + " " + age.value + " " + "months" + "\r\n" + textString);
+     }
+
      //will use ex: body weight = 4000 (expected range for GA is 3000 - 3500 grams)
      //drawTable();
      drawVisualization();
@@ -1231,7 +1293,7 @@ var defineAgeParams = function (detAge) {
 
  var generate_expected = function () {
 
-     
+
      trimmedExpected = trimmer(expectedRange[0]);
 
      trimmedExpectedSD = trimmer(expectedRange[1]);
@@ -1239,36 +1301,36 @@ var defineAgeParams = function (detAge) {
      for (var i = 0; i < labels.length; i++) {
          //store new range for actual values and text	
          //trimmedExpected, trimmedCorrected
+         if (cleaned == false || (cleaned == true && actualRange[i] != "")) {
 
-
-         //$('#report-output').(expectedRange[0][i]);
-         // \n for new paragraph and append
-         //currentRange = calcTwoSD("M" + GA.value, "SD" + GA.value, i);
-         if (liveBorn == false) {
-             textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 95% range of" + " " + Math.round([trimmedExpected[i] - trimmedExpectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedExpected[i] + trimmedExpectedSD[i] * 2] * 10) / 10 + ")";
-         }
-         else {
-             if (labels[i] == "Crown Heel Length (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[0] + " to " + highpercentiles[0] + ")";
-             }
-             else if (labels[i] == "Head Circumference (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[1] + " to " + highpercentiles[1] + ")";
-
-             }
-
-             else if (labels[i] == "Body Weight (g)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[2] + " to " + highpercentiles[2] + ")";
-
-             }
-             else if (labels[i] == "Chest Circumference (cm)" || labels[i] == "Abdominal Circumference (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + "--Ranges not available at this time)";
-
-             }
-             else {
+             //$('#report-output').(expectedRange[0][i]);
+             // \n for new paragraph and append
+             //currentRange = calcTwoSD("M" + GA.value, "SD" + GA.value, i);
+             if (liveBorn == false) {
                  textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 95% range of" + " " + Math.round([trimmedExpected[i] - trimmedExpectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedExpected[i] + trimmedExpectedSD[i] * 2] * 10) / 10 + ")";
              }
-         };
+             else {
+                 if (labels[i] == "Crown Heel Length (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[0] + " to " + highpercentiles[0] + ")";
+                 }
+                 else if (labels[i] == "Head Circumference (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[1] + " to " + highpercentiles[1] + ")";
 
+                 }
+
+                 else if (labels[i] == "Body Weight (g)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 5th and 95th percentiles of  " + lowPercentiles[2] + " to " + highpercentiles[2] + ")";
+
+                 }
+                 else if (labels[i] == "Chest Circumference (cm)" || labels[i] == "Abdominal Circumference (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + "--Ranges not available at this time)";
+
+                 }
+                 else {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + " with 95% range of" + " " + Math.round([trimmedExpected[i] - trimmedExpectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedExpected[i] + trimmedExpectedSD[i] * 2] * 10) / 10 + ")";
+                 }
+             };
+         }
      }
 
  }
@@ -1279,7 +1341,10 @@ var defineAgeParams = function (detAge) {
      trimmedCorrected = trimmer(correctedRange[0]);
 
      trimmedCorrectedSD = trimmer(correctedRange[1]);
-     if (GAA < 99) {
+     if (tiny == true){
+         textString = textString + "\r\n" + "\r\n" + "Most compatible measurements for :" + " " + GAA + " " + "weeks" + "\r\n"
+     }
+     else if (GAA < 99) {
          textString = textString + "\r\n" + "\r\n" + "Most compatible measurements for :" + " " + GAA + " " + "weeks" + "\r\n"
      }
      if (GAA >= 99) {
@@ -1292,33 +1357,33 @@ var defineAgeParams = function (detAge) {
          //$('#report-output').(expectedRange[0][i]);
          // \n for new paragraph and append
          //currentRange = calcTwoSD("M" + GA.value, "SD" + GA.value, i);
+         if (cleaned == false || (cleaned == true && actualRange[i] != "")) {
 
-
-         if (liveBorn == false) {
-             textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 95% range of" + " " + Math.round([trimmedCorrected[i] - trimmedCorrectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedCorrected[i] + trimmedCorrectedSD[i] * 2] * 10) / 10 + ")";
-         }
-         else {
-             if (labels[i] == "Crown Heel Length (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[0] + " to " + chighPercentiles[0] + ")";
-             }
-             else if (labels[i] == "Head Circumference (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[1] + " to " + chighPercentiles[1] + ")";
-
-             }
-
-             else if (labels[i] == "Body Weight (g)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[2] + " to " + chighPercentiles[2] + ")";
-
-             }
-             else if (labels[i] == "Chest Circumference (cm)" || labels[i] == "Abdominal Circumference (cm)") {
-                 textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + "--Ranges not available at this time)";
-
-             }
-             else {
+             if (liveBorn == false || tiny == true) {
                  textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 95% range of" + " " + Math.round([trimmedCorrected[i] - trimmedCorrectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedCorrected[i] + trimmedCorrectedSD[i] * 2] * 10) / 10 + ")";
              }
-         };
+             else {
+                 if (labels[i] == "Crown Heel Length (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[0] + " to " + chighPercentiles[0] + ")";
+                 }
+                 else if (labels[i] == "Head Circumference (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[1] + " to " + chighPercentiles[1] + ")";
 
+                 }
+
+                 else if (labels[i] == "Body Weight (g)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 5th and 95th percentiles of  " + clowPercentiles[2] + " to " + chighPercentiles[2] + ")";
+
+                 }
+                 else if (labels[i] == "Chest Circumference (cm)" || labels[i] == "Abdominal Circumference (cm)") {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedExpected[i] + "--Ranges not available at this time)";
+
+                 }
+                 else {
+                     textString = textString + "\r\n" + labels[i] + " " + actualRange[i] + " " + "(Mean:" + " " + trimmedCorrected[i] + " with 95% range of" + " " + Math.round([trimmedCorrected[i] - trimmedCorrectedSD[i] * 2] * 10) / 10 + " - " + Math.round([trimmedCorrected[i] + trimmedCorrectedSD[i] * 2] * 10) / 10 + ")";
+                 }
+             };
+         }
 
      }
 
@@ -1400,7 +1465,11 @@ var stopNumber = 0;
 var data = new google.visualization.DataTable();
 data.addColumn('string','Measurements')
 var myLabels = []
-if (GAA < 99){
+if (tiny == true){
+    myLabels = ['Actual values', 'Expected Means' + " " + age.value + " months", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + GAA + " weeks", 'SD', 'Min', 'Max'];
+}
+
+else if (GAA < 99){
    
 myLabels = ['Actual values', 'Expected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + GAA + " weeks", 'SD', 'Min', 'Max'];
 }
@@ -1412,93 +1481,105 @@ else {
 }
 
 
-
+//additionalData[j] = checkNaN(additionalData[j], myLabels, stopNumber);
 
 if (GAA == GA.value || age.value == lvAge || detAge == "None") {
   
    
     stopNumber = 4;
 }
+if (tiny == true) { stopNumber = 0; }
 for (var i = 0; i < myLabels.length - stopNumber; i++) {
-    data.addColumn('number', myLabels[i]);
+    data.addColumn('string', myLabels[i]);
+    //this was number, now text
     //data.setCell(0, i, true, {'style': 'background-color: red;'});
 };
 
   
 
 var additionalData = convertTable();
-
+//var newData = []
 for (var j = 0; j < labels.length; j++) {
+
+    additionalData[j] = checkNaN(additionalData[j], myLabels, stopNumber)
     data.addRow(additionalData[j]);
-   // data.setCell(i, 1, {'className': 'bold-font'});
-    //data.setRowProperties(j, {'style' : 'italic-purple-font large-font'} );
-    if (labels[j] != "Head Circumference (cm)" && labels[i] != "Body Weight (g)" && labels[i] != "Crown Heel Length (cm)") {
+    
+       // alert (additionalData[j][1] + " " + typeof additionalData [j][1])
+        //additionalData[j]);
+        
+        // data.setCell(i, 1, {'className': 'bold-font'});
+        //data.setRowProperties(j, {'style' : 'italic-purple-font large-font'} );
+        if (labels[j] != "Head Circumference (cm)" && labels[i] != "Body Weight (g)" && labels[i] != "Crown Heel Length (cm)") {
 
-        if (actualRange[j] > trimmedExpected[j] + 2 * trimmedExpectedSD[j] || actualRange[j] < trimmedExpected[j] - 2 * trimmedExpectedSD[j]) {
+            if (actualRange[j] > trimmedExpected[j] + 2 * trimmedExpectedSD[j] || actualRange[j] < trimmedExpected[j] - 2 * trimmedExpectedSD[j]) {
 
-            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'yellow-border left-text' });
-        }
-        if (GA != GAA && actualRange[j] > trimmedCorrected[j] + 2 * trimmedCorrectedSD[j] || actualRange[j] < trimmedCorrected[j] - 2 * trimmedCorrectedSD[j]) {
+                data.setCell(j, 1, (actualRange[j]), null, { 'className': 'yellow-border left-text' });
+            }
+            if (GA != GAA && actualRange[j] > trimmedCorrected[j] + 2 * trimmedCorrectedSD[j] || actualRange[j] < trimmedCorrected[j] - 2 * trimmedCorrectedSD[j]) {
 
-            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font left-text' });
-        }
+                data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font left-text' });
+            }
 
 
-        if ((GA != GAA && actualRange[j] > trimmedCorrected[j] + 2 * trimmedCorrectedSD[j] || actualRange[j] < trimmedCorrected[j] - 2 * trimmedCorrectedSD[j]) &&
+            if ((GA != GAA && actualRange[j] > trimmedCorrected[j] + 2 * trimmedCorrectedSD[j] || actualRange[j] < trimmedCorrected[j] - 2 * trimmedCorrectedSD[j]) &&
     (actualRange[j] > trimmedExpected[j] + 2 * trimmedExpectedSD[j] || actualRange[j] < trimmedExpected[j] - 2 * trimmedExpectedSD[j])) {
 
-            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
+                data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
+            }
         }
+        else {
+
+            switch (labels[j]) {
+                case "Head Circumference (cm)":
+                    if (actualRange[j] < lowPercentiles[1] || actualRange[j] > highpercentiles[1]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'yellow-border left-text' });
+                    }
+                    if (actualRange[j] < clowPercentiles[1] || actualRange[j] > chighPercentiles[1]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font left-text' });
+                    }
+
+                    if ((actualRange[j] < clowPercentiles[1] || actualRange[j] > chighPercentiles[1]) && (actualRange[j] < lowPercentiles[1] || actualRange[j] > highpercentiles[1])) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
+                    }
+                    break;
+
+                case "Crown Heel Length (cm)":
+                    if (actualRange[j] < lowPercentiles[0] || actualRange[j] > highpercentiles[0]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'yellow-border left-text' });
+                    }
+                    if (actualRange[j] < clowPercentiles[0] || actualRange[j] > chighPercentiles[0]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font left-text' });
+                    }
+
+                    if ((actualRange[j] < clowPercentiles[0] || actualRange[j] > chighPercentiles[0]) && (actualRange[j] < lowPercentiles[0] || actualRange[j] > highpercentiles[0])) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
+                    }
+                    break;
+
+                case "Body Weight (g)":
+                    if (actualRange[j] < lowPercentiles[2] || actualRange[j] > highpercentiles[2]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'yellow-border left-text' });
+                    }
+                    if (actualRange[j] < clowPercentiles[2] || actualRange[j] > chighPercentiles[2]) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font left-text' });
+                    }
+
+                    if ((actualRange[j] < clowPercentiles[2] || actualRange[j] > chighPercentiles[2]) && (actualRange[j] < lowPercentiles[2] || actualRange[j] > highpercentiles[2])) {
+                        data.setCell(j, 1, (actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
+                    }
+                    break;
+            }
+
+
+        //setRowProperty(rowIndex, name, value)
     }
-    else {
-        
-        switch (labels[j]){
-                    case "Head Circumference (cm)":
-                        if (actualRange[j] < lowPercentiles[1] || actualRange[j] > highpercentiles [1]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'yellow-border left-text' });
-                        }
-                        if (actualRange [j] < clowPercentiles [1] || actualRange [j] > chighPercentiles [1]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font left-text' });
-                        }
+    //area for checking NaN
+   
+   // checkNaN(actualRange[j], myLabels);
 
-                        if ((actualRange [j] < clowPercentiles [1] || actualRange [j] > chighPercentiles [1])&&(actualRange[j] < lowPercentiles[1] || actualRange[j] > highpercentiles [1])){
-                             data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
-                        }
-                        break;
-
-                        case "Crown Heel Length (cm)":
-                        if (actualRange[j] < lowPercentiles[0] || actualRange[j] > highpercentiles [0]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'yellow-border left-text' });
-                        }
-                        if (actualRange [j] < clowPercentiles [0] || actualRange [j] > chighPercentiles [0]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font left-text' });
-                        }
-
-                        if ((actualRange [j] < clowPercentiles [0] || actualRange [j] > chighPercentiles [0])&&(actualRange[j] < lowPercentiles[0] || actualRange[j] > highpercentiles [0])){
-                             data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
-                        }
-                        break;
-
-                        case "Body Weight (g)":
-                        if (actualRange[j] < lowPercentiles[2] || actualRange[j] > highpercentiles [2]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'yellow-border left-text' });
-                        }
-                        if (actualRange [j] < clowPercentiles [2] || actualRange [j] > chighPercentiles [2]){
-                            data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font left-text' });
-                        }
-
-                        if ((actualRange [j] < clowPercentiles [2] || actualRange [j] > chighPercentiles [2])&&(actualRange[j] < lowPercentiles[2] || actualRange[j] > highpercentiles [2])){
-                             data.setCell(j, 1, parseFloat(actualRange[j]), null, { 'className': 'italic-red-font yellow-border left-text' });
-                        }
-                        break;
-                }
+}
 
 
-    }
-
-    //setRowProperty(rowIndex, name, value)
-};
-//data.setColumn(1,'className':'left-text')
 
   // Create and draw the visualization.
   visualization = new google.visualization.Table(document.getElementById('table'));
@@ -1510,85 +1591,129 @@ for (var j = 0; j < labels.length; j++) {
 
 function convertTable(){
     var convertedTable = [];
-    
-    if (liveBorn == false) {
-        if (GAA == GA.value) {
+    var j = 0;
+        if (tiny == true){
             for (var i = 0; i < labels.length; i++) {
-
-                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10]
-
-
-            }
-
-        }
-        else {
-            for (var i = 0; i < labels.length; i++) {
-                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10, parseFloat(trimmedCorrected[i]),
-        parseFloat(trimmedCorrectedSD[i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10];
-            }
-
-        }
-    }
-    else {
-    
-        for (var i = 0; i < labels.length; i++) {
-      
-            if (labels[i] != "Head Circumference (cm)" && labels[i] != "Body Weight (g)" && labels[i] != "Crown Heel Length (cm)") {
-                if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value !="") ||  detAge == "None") {
                     
-                    convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10]
+                        
+                       
+                    
+                    switch (labels[i]) {
+                        case "Head Circumference (cm)":
+                            
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[1], highpercentiles[1], parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD [i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10]
+                            
+                            break;
 
+                        case "Crown Heel Length (cm)":
+                            
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[0], highpercentiles[0], parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD [i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10]
+                            
+                            break;
+
+                        case "Body Weight (g)":
+                           
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[2], highpercentiles[2],parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD [i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10]
+                            
+                            break;
+
+                        default:
+                          convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10, parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD[i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10];
+                            break;
+                    }
 
                 }
-                
-                else {
-                   
-                    convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10, parseFloat(trimmedCorrected[i]),
-        parseFloat(trimmedCorrectedSD[i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10];
+
+        }
+
+        else if (liveBorn == false) {
+            if (GAA == GA.value) {
+                for (var i = 0; i < labels.length; i++) {
+                    
+                        
+                        convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10]
+                    
+
                 }
 
             }
             else {
-              
-                switch (labels[i]){
-                    case "Head Circumference (cm)":
-                        if ((age.value == lvAge && GAA != 99) || (GA.value == GAA && AB.value !="")||  detAge == "None") {
-                         
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[1], highpercentiles [1]]
-                        }
-                        else {
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles [1], highpercentiles [1], parseFloat(trimmedCorrected[i]),
-        NaN, clowPercentiles[1], chighPercentiles [1]]
-                        }
-                        break;
 
-                        case "Crown Heel Length (cm)":
-                        if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value !="" ||  detAge == "None")) {
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[0], highpercentiles [0]]
-                        }
-                        else {
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles [0], highpercentiles [0], parseFloat(trimmedCorrected[i]),
-        NaN, clowPercentiles[0], chighPercentiles [0]]
-                        }
-                        break;
-
-                        case "Body Weight (g)":
-                        if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value !="") ||  detAge == "None") {
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[2], highpercentiles [2]]
-                        }
-                        else {
-                            convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles [2], highpercentiles [2], parseFloat(trimmedCorrected[i]),
-        NaN, clowPercentiles[2], chighPercentiles [2]]
-                        }
-                        break;
-                }
+                for (var i = 0; i < labels.length; i++) {
+                  
+                    convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10, parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD[i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10];
                 
+                }
 
             }
         }
+        else {
 
-    };
-    return convertedTable;
+            for (var i = 0; i < labels.length; i++) {
+
+                if (labels[i] != "Head Circumference (cm)" && labels[i] != "Body Weight (g)" && labels[i] != "Crown Heel Length (cm)") {
+                    if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value != "") || detAge == "None") {
+
+                        convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10]
+
+
+                    }
+
+                    else {
+
+                        convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), trimmedExpectedSD[i], Math.round([parseFloat(trimmedExpected[i]) - 2 * trimmedExpectedSD[i]] * 10) / 10, Math.round([parseFloat(trimmedExpected[i]) + 2 * trimmedExpectedSD[i]] * 10) / 10, parseFloat(trimmedCorrected[i]),
+        parseFloat(trimmedCorrectedSD[i]), Math.round([parseFloat(trimmedCorrected[i]) - trimmedCorrectedSD[i] * 2] * 10) / 10, Math.round([parseFloat(trimmedCorrected[i]) + 2 * trimmedCorrectedSD[i]] * 10) / 10];
+                    }
+
+                }
+                else {
+
+                    switch (labels[i]) {
+                        case "Head Circumference (cm)":
+                            if ((age.value == lvAge && GAA != 99) || (GA.value == GAA && AB.value != "") || detAge == "None") {
+
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[1], highpercentiles[1]]
+                            }
+                            else {
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[1], highpercentiles[1], parseFloat(trimmedCorrected[i]),
+        NaN, clowPercentiles[1], chighPercentiles[1]]
+                            }
+                            break;
+
+                        case "Crown Heel Length (cm)":
+                            if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value != "" || detAge == "None")) {
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[0], highpercentiles[0]]
+                            }
+                            else {
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[0], highpercentiles[0], parseFloat(trimmedCorrected[i]),
+        NaN, clowPercentiles[0], chighPercentiles[0]]
+                            }
+                            break;
+
+                        case "Body Weight (g)":
+                            if (age.value == lvAge && GAA != 99 || (GA.value == GAA && AB.value != "") || detAge == "None") {
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[2], highpercentiles[2]]
+                            }
+                            else {
+                                convertedTable[i] = [labels[i], parseFloat(actualRange[i]), parseFloat(trimmedExpected[i]), NaN, lowPercentiles[2], highpercentiles[2], parseFloat(trimmedCorrected[i]),
+        NaN, clowPercentiles[2], chighPercentiles[2]]
+                            }
+                            break;
+                    }
+
+
+                }
+            }
+
+        };
+    //var newTable = checkNaN(convertedTable, myLabels, stopNumber)
+    return convertedTable; 
+    //convertedTable;
 }
 
 //for pain in the rear tables that lack SDs.
@@ -1731,7 +1856,7 @@ function pullPercentiles(tableID, origAge, newAge) {
                     highpercentiles[1] = CDCFHC[oM][2];
                     highpercentiles[2] = CDCFWT[oM][2];
 
-                    if (origAge != newAge && detAge != "None") {
+                    if (origAge != newAge && detAge != "None" && tine == false) {
                         correctedRange[0][2] = CDCFL[nM][1];
                         correctedRange[0][3] = CDCFHC[nM][1];
                         correctedRange[0][6] = CDCFWT[nM][1];
@@ -1764,25 +1889,51 @@ s3dbc.setDeployment(s3dbURL);
 function testmyDB(){
     //var d = new Date();
     //d.getDate + " " + d.getHours
-        s3dbc.insertItem(3091, "test" , (function (err, id) {
-       //will just create a statement for all my data (actualrange)
-       console.log(id)
-     
+    var insertAge = insertAges();
+    s3dbc.insertItem(3091, caseNumber, (function (err, id) {
+        //will just create a statement for all my data (actualrange)
+        console.log(id)
+
         //console.log(err, id);
         //console.log(actualRange);
-        s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
-            s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
-                s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
-                alert ("Your data has been added!")
 
-                 }));
-
+        s3dbc.insertStatement(id[0].item_id, 3193, insertAge[0], (function () {
+            s3dbc.insertStatement(id[0].item_id, 3687, insertAge[1], (function () {
+                s3dbc.insertStatement(id[0].item_id, 3691, liveBorn, (function () {
+                    s3dbc.insertStatement(id[0].item_id, 3695, mac.options[mac.selectedIndex].value, (function () {
+                    s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
+                        s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
+                            s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
+                                alert("Your data has been added!")
+                                }));
+                            }));
+                        }));
+                    }));
+                }));
             }));
         }));
-
     }));
-
 };
+
+function insertAges (){
+    var age1;
+    var age2;
+
+    if (liveBorn == false) {
+        age1 = GA.value;
+      if (GAA >= 99) {
+          age2 = lvAge;
+      }
+      else { age2 = GAA; }
+    }
+
+    if (liveBorn == true) {
+        age1 = age.value;
+        age2 = lvAge;
+    }
+   
+    return [age1, age2];
+}
 
 var loginUser = function () {
     s3dbc.setDeployment(s3dbURL);
@@ -1824,6 +1975,7 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
 
  };
  */
+
  function loadLoginForm(){
      $('#removeLogin').fadeOut('fast');
      document.getElementById('loginArea').style.top = '2%';
@@ -1836,4 +1988,33 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
      localStorage .clear ();
      $('#loggedInCurrently').fadeOut('fast');
      $('#removeLogin').fadeTo('fade', 1);
+ }
+
+
+ function checkNaN (x, myLabels, stopNumber){
+     //for (o = 0; o < labels.length; o++) {
+     for (i = 0; i <= myLabels.length - stopNumber; i++) {
+         if (i > 0) {
+             if ((i == 1 && isNaN(x[i])) || (i ==1 && x[i] == "") || (i ==1 && x[i] == "NaN")){
+                 x[i] = ""
+             }
+             else if (isNaN(x[i]) || x[i] == NaN || x[i] == 0) {
+             if (i != 3 && i != 4 && i != 8 && i != 9) {
+                 x[i] = "NKV";
+             }
+             else {
+                 x[i] = x[i] + "";
+             };
+             }
+             else {
+                 x[i] = x[i] + "";
+            
+                 //x[i] = x[i].toString();
+             }
+             //alert(x[o][i] + " " + typeof x[o][i]);
+         };
+
+     }
+     //}
+     return x;
  }
