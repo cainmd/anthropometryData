@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <script type="text/javascript" src="http://www.google.com/jsapi"></script>
  <script type="text/javascript">
       google.load('visualization', '1', {packages: ['table']});
@@ -190,6 +190,10 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
         
     Blood Culture: <input type="text" id="culture" value=""> 
     </div>
+
+    <div>
+    Case number: <input type="text" id="caseNumber" value="">
+    </div>
         <!--select boxes for gender, race and possible entry for disorderand cultures-->
 
 
@@ -247,13 +251,17 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
   </tr>
 </table>
  <br></br>
+        Clean report (remove areas without your input): <input type="checkbox" id="cleanReport"> <br>
  <input type="button" value="Submit" id ="submit" >
-        <input type="button" value="TestDB" id ="testDB" >
-<div id="legend">Key:</div>
+        <input type="button" value="Save Results" id ="saveResults" >
+        <!-- need to have a way to easily tab this over and include bullets -->
+<div id="legend">Key:</div> 
 <div id= "yellowborder">Value outside normal range expected</div>
 <div id ="separator">    /    </div>
 <div id="redfont">Value outside range expected for body habitus found most compatible with case anthropometry</div>
-           
+ <br>
+        <p style="padding-left:6.4cm;">"NKV" stands for "No Known Value" and indicates a value does not exist for the given parameter.</p>    
+            
 <div id="table"></div>
 <br></br>
 <div>
@@ -272,7 +280,7 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
 </div>  
 
  <div id = "footer">
- <p>Posted by: Matthew Cain, MD, Jonas Almeida, PhD, and Ona Marie Faye-Petersen, MD</p>
+ <p>Posted by: Matthew Cain, MD; Joseph Siebert, PhD; Jonas Almeida, PhD; and Ona Marie Faye-Petersen, MD</p>
  
  </div> 
  </body>
