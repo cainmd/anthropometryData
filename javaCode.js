@@ -1225,7 +1225,7 @@ var defineAgeParams = function (detAge) {
          stop();
      }
      else if (liveBorn == true) {
-         if (age.value > 12 || age.value <= 0) {
+         if ((age.value > 12 || age.value <= 0) && AB.value == "") {
              alert("Range only goes to 12 months, cannot process this value. If you entered 0, please enter values in weeks using above entries.")
              age.style.background = "yellow";
              stop();
