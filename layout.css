@@ -1,23 +1,21 @@
 table {
-    width: 100% ;
+    width:  100% ;
     
 }
 
 td {
-    width: fill-available;  
+    width: 35%;  
 }
-
-
 form {
     
 fit-position: fill;    
 text-align: right;
 font-family: Verdana;
 //width: 400px;
-width: 98%;
-font-size: large;  
+width: auto;
+font-size: x-large;  
 border-style:solid;
-border-width:5px; 
+border-width:5px;
 background-color : white;
 }
 /*added the below table statement*/
@@ -58,7 +56,8 @@ background-color : white;
 text-align: left;
 border: none;
 word-wrap: normal;
-width: 400px;    
+/*
+width: 500px;  */  
 /*/min-width: 300px;    
 max-width: 400px;
     */
@@ -83,7 +82,7 @@ h1{
 head h2,h3{
    color: black;
    font-family: 'Baskerville Old Face';
-   font-size: xx-large;
+   font-size: x-large;
 }
 
 #menu{
@@ -103,7 +102,9 @@ body{
 
 //background-image:url('bodyBackground.jpg');
 background-color: #f7f4f4;
-
+/*
+margin: 0px 0px 0px 0px;
+padding-right: 0px; */
 //background-size: 100% auto;
 
 
@@ -164,7 +165,8 @@ left;
 
 
 input {
-  
+  text-align: right;
+ font-size: large;
 //display: inline-block;
   
 //float: right; 
@@ -196,9 +198,9 @@ input {
     
     z-index: 1;
  */ 
-  height: 400px;
+  height: fit-content ;
   font-size: large;
-  width: 44%;
+  width: 50%;
   display: none;
   border: 3px solid black;
 }
