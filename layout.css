@@ -1,14 +1,10 @@
-table{
+table {
+    width:  fill-available ;
     
-    
-    width: auto;
 }
 
-th, td {
-    /* border: 1px solid black;
-    overflow: hidden;
-    */
-    width: 100%;
+td {
+    width: fill-available;  
 }
 
 
