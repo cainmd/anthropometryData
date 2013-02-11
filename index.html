@@ -16,7 +16,9 @@
 
     <body style ="margin: auto">
         <!--<div class="container">-->
-
+    
+    <img src="ajax-loader.gif" alt="Loading" id="ajaxLoading" style="display: none">
+        
  <div style="background-image: url(border.jpg); height: 100px" >
  <h1>
     Gestational Age Anthropometry
@@ -26,8 +28,7 @@
  Live Birth: <input type="checkbox" id="livebirth">
  </div>
 
-<div class="control-group">
-</div>
+
 <div class="control-group">
 </div>
 
@@ -37,20 +38,25 @@
     <button id="loginButton">Login</button> <br>
     <a href="login.html" id="createLogin">Create an account.</a><br>
         </div>
-    <div id="hiddenLogin" style="display: none ">
-        <form id="loginForm" >
-        UserId: <input type="text" id="userName" value=""> <br>
-        Password: <input type="password" id="password" value=""><br>
-        <button id="submitLogin">Login</button> 
+    
+    <div id="loggedInCurrently" style="display: none">
+        
+    <button id="logoutButton">Logout</button> <br>
+    <button id="retrieveData">Retrieve Data</button> <br>
+    </div>
+
+</div>
+
+    <div id="hiddenLogin" style="display: none">
+        <form id="loginForm" style="text-align: right; font-size: small ">
+        UserId: <input type="text" id="userName" value="" ><br>
+        <p>Password: <input type="password" id="password" value="" ></p>
+        <br>
+            <button id="submitLogin">Login</button> 
             <button id="exitLogin">Exit</button>
         </form>
         
     </div>
-    <div id="loggedInCurrently" style="display: none">
-        <br>
-    <button id="logoutButton">Logout</button>
-    </div>
-</div>
             
 <table id= "formTable" style="width: fill-available">
 <tr>
@@ -183,16 +189,22 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
         <option value="other">Other</option>
         </select></div>
 
+    <div style="background: black; height: 10px"></div>
+        <p style="padding-right: 30%"><span style="font-size: large; color: #0000FF">Information for storage (queriable)</span></p>
     <div>
-    Disorder (ie: Heterotaxy, Down's): <input type="text" id="disorder" value="">
+    Disorder (ie: Heterotaxy, Down's): <input type="text" id="disorder" value=" ">
     </div>
+    
     <div>
-        
-    Blood Culture: <input type="text" id="culture" value=""> 
+    Genetics: <input type="text" id="genetics" value=" ">
     </div>
 
+    <div>  
+    Blood Culture: <input type="text" id="culture" value=" "> 
+    </div>
+    
     <div>
-    Case number: <input type="text" id="caseNumber" value="">
+    Case number: <input type="text" id="caseNumber" value=" ">
     </div>
         <!--select boxes for gender, race and possible entry for disorderand cultures-->
 
@@ -200,7 +212,7 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
  </form> 
     </td>
     <td valign="top">
-<form id="form3" >
+<form id="form3">
     <!--
 <div id="accordion-resizer" class="ui-widget-content" style="height: fit-content">
     -->
@@ -238,7 +250,15 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
                 <li>Access data section will be completed later.</li>
                 </ol>
             </div>
-            
+            <h4>Retrieving Data</h4>
+            <div>
+                <ol>
+                    <li>Please login first.</li>
+                    <li>Click retrieve data or go to <a href="https://uab.s3db.org/s3db/home.php?" style="color: #0000FF" target="_blank">s3db</a>.</li>
+                    <li>Complete data form for retrieval.</li>
+                
+                </ol>
+            </div>
         </div>
 
 
@@ -252,15 +272,19 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
 </table>
  <br></br>
         Clean report (remove areas without your input): <input type="checkbox" id="cleanReport"> <br>
- <input type="button" value="Submit" id ="submit" >
-        <input type="button" value="Save Results" id ="saveResults" >
+        <input type="button" value="Submit" id ="submit" >
+        <input type="button" value="Save Results" id ="saveResults" style ="display:none"> 
         <!-- need to have a way to easily tab this over and include bullets -->
-<div id="legend">Key:</div> 
-<div id= "yellowborder">Value outside normal range expected</div>
-<div id ="separator">    /    </div>
-<div id="redfont">Value outside range expected for body habitus found most compatible with case anthropometry</div>
+<br>
+        <p>Key:</p>
+<ul>
+    <li><span class="gold-border">Value outside normal range expected</span> </li>
+    <li><span class="italic-red-font">Value outside range expected for body habitus found most compatible with case anthropometry</span></li>
+    <li>"NKV" stands for "No Known Value" and indicates a value does not exist for the given parameter.</li>
+</ul>     
+
  <br>
-        <p style="padding-left:6.4cm;">"NKV" stands for "No Known Value" and indicates a value does not exist for the given parameter.</p>    
+ 
             
 <div id="table"></div>
 <br></br>
@@ -281,7 +305,7 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
 
  <div id = "footer">
  <p>Posted by: Matthew Cain, MD; Joseph Siebert, PhD; Jonas Almeida, PhD; and Ona Marie Faye-Petersen, MD</p>
- 
+ <p>Copyright 2013</p>
  </div> 
  </body>
 
