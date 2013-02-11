@@ -20,7 +20,7 @@ background-color : white;
 }
 /*added the below table statement*/
 #ajaxLoading{
-    position: absolute ;
+    position: fixed ;
     top:  45%;
     left: 45%;
     z-index: 3;
