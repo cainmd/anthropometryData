@@ -15,7 +15,7 @@ if (window.hasOwnProperty('jQuery') === false) {
 var $ = window.jQuery;
 
 var s3dbURL = "https://uab.s3db.org/s3db/";
-//var key = "hJLi8Bs3TXAOtbs";
+var key = "hJLi8Bs3TXAOtbs";
 
 //used to determine values in maceration columns
 var step;
@@ -48,7 +48,7 @@ var detEntry;
 var rangeMeas;
 
 var cleaned = false;
-
+var dataSubmitted = false;
 var form1 = document.getElementById("form1");
 
 
@@ -67,7 +67,7 @@ var saveResults = document.getElementById("saveResults");
 var loginButton = document.getElementById("loginButton");
 var submitLogin = document.getElementById("submitLogin");
 var logoutButton = document.getElementById("logoutButton");
-
+var exitButton = document.getElementById("exitLogin");
 //checkboes
 
 var lvBirth = document.getElementById("livebirth");
@@ -96,8 +96,11 @@ var AW = document.getElementById("AW");
 var AB = document.getElementById("AB");
 var WA = document.getElementById("WA");
 
+//additional save values
+var geneticsInfo = document.getElementById("genetics");
 var caseNumber = document.getElementById("caseNumber");
-
+var culture = document.getElementById("culture");
+var disorder = document.getElementById("disorder");
 
 var removable = document.getElementById("removable");
 var hidden = document.getElementById("hiddenBlock");
@@ -575,6 +578,12 @@ saveResults.onclick = function () { testmyDB() };
 loginButton.onclick = function () { loadLoginForm() };
 
 logoutButton.onclick = function () { logoutProc();  }
+exitButton .onclick = function(){
+    $('#removeLogin').fadeTo('fast', 1);
+     //document.getElementById('loginArea').style.top = '2%';
+     $('#hiddenLogin').fadeout('fast');
+
+}
 //resetUse()
 
 //var y=document.getElementById("maceration").options;
@@ -1271,7 +1280,7 @@ var defineAgeParams = function (detAge) {
      };
      if (tiny == true) {
          // alert (age.value +" " + lvAge)
-         alert ("here")
+        
          generate_corrected();
          document.getElementById('report-output').style.height = "400px";
      }
@@ -1582,11 +1591,12 @@ for (var j = 0; j < labels.length; j++) {
 
 
 
+
   // Create and draw the visualization.
   visualization = new google.visualization.Table(document.getElementById('table'));
   visualization.draw(data, options);
-  
 
+  saveResults.style.display = 'inline-block';
 
 }
 
@@ -1882,30 +1892,41 @@ function pullPercentiles(tableID, origAge, newAge) {
 }
 
 var id = [];
-/*
+
 s3dbc.setKey(key);
 s3dbc.setDeployment(s3dbURL);
-*/
+var loader = document.getElementById("ajaxLoading");
 
 function testmyDB(){
     //var d = new Date();
     //d.getDate + " " + d.getHours
     var insertAge = insertAges();
-    s3dbc.insertItem(3091, caseNumber, (function (err, id) {
+   // var h = 0;
+   // if (h == 100) {
+    console.log(insertAge[0] + " " + typeof insertAge[0]);
+    console.log(insertAge[1]);
+    s3dbc.insertItem(3091, caseNumber.value, (function (err, id) {
         //will just create a statement for all my data (actualrange)
         console.log(id)
-
+        loader.style.display = "block";
         //console.log(err, id);
         //console.log(actualRange);
+        s3dbc.insertStatement(id[0].item_id, 3185, disorder.value, (function () {
+            s3dbc.insertStatement(id[0].item_id, 3969, geneticsInfo.value, (function () {
+                s3dbc.insertStatement(id[0].item_id, 3973, culture.value, (function () {
+                    s3dbc.insertStatement(id[0].item_id, 3193, insertAge[0], (function () {
+                        s3dbc.insertStatement(id[0].item_id, 3687, insertAge[1], (function () {
+                            s3dbc.insertStatement(id[0].item_id, 3691, liveBorn, (function () {
+                                s3dbc.insertStatement(id[0].item_id, 3695, mac.options[mac.selectedIndex].value, (function () {
+                                    s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
+                                        s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
+                                            s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
+                                                document.getElementById("ajaxLoading").style.display = "none";
+                                                alert("Your data has been added!")
 
-        s3dbc.insertStatement(id[0].item_id, 3193, insertAge[0], (function () {
-            s3dbc.insertStatement(id[0].item_id, 3687, insertAge[1], (function () {
-                s3dbc.insertStatement(id[0].item_id, 3691, liveBorn, (function () {
-                    s3dbc.insertStatement(id[0].item_id, 3695, mac.options[mac.selectedIndex].value, (function () {
-                    s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
-                        s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
-                            s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
-                                alert("Your data has been added!")
+                                            }));
+                                        }));
+                                    }));
                                 }));
                             }));
                         }));
@@ -1914,6 +1935,8 @@ function testmyDB(){
             }));
         }));
     }));
+    
+
 };
 
 function insertAges (){
@@ -1921,26 +1944,40 @@ function insertAges (){
     var age2;
 
     if (liveBorn == false) {
-        age1 = GA.value;
+        age1 = GA.value + " wks";
       if (GAA >= 99) {
-          age2 = lvAge;
+          age2 = lvAge + " mos";
       }
-      else { age2 = GAA; }
+      else { age2 = GAA + " wks"; }
     }
 
     if (liveBorn == true) {
-        age1 = age.value;
-        age2 = lvAge;
+        if (AB.value != "" && GAA < 50) {
+            age1 = GA.value + " wks";
+            age2 = GAA + " wks";
+        }
+        else if (AB.value != "" && GAA >= 99) {
+            age1 = GA.value + " wks";
+            age2 = lvAge + " mos";
+        }
+        else if (tiny == true) {
+            age1 = age.value + " mos"
+            age2 = GAA + " wks";
+        }
+        else {
+            age1 = age.value + " mos";
+            age2 = lvAge + " mos";
+        }
     }
    
     return [age1, age2];
-}
+};
 
 var loginUser = function () {
     s3dbc.setDeployment(s3dbURL);
 
     s3dbc.login(userName.value, password.value, (function (err, key) {
-        
+
         if (err !== null) {
 
             console.error("Login failed.", err);
@@ -1958,6 +1995,7 @@ var loginUser = function () {
         console.log(key);
         localStorage.setItem("key", key);
         */
+        
     }));
 };
 
@@ -1978,9 +2016,10 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
  */
 
  function loadLoginForm(){
-     $('#removeLogin').fadeOut('fast');
-     document.getElementById('loginArea').style.top = '2%';
-     $('#hiddenLogin').fadeTo('slow', 1);
+    // $('#removeLogin').fadeOut('fast');
+     document.getElementById("removeLogin").style.display = "none";
+     //document.getElementById('loginArea').style.top = '2%';
+     $('#hiddenLogin').fadeTo('fast', 1);
      
  }
 
@@ -2000,13 +2039,18 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
                  x[i] = ""
              }
              else if (isNaN(x[i]) || x[i] == NaN || x[i] == 0) {
-             if (i != 3 && i != 4 && i != 8 && i != 9) {
+             if (i != 3 && i != 8) {
+                 //i!=4    && i != 9
                  x[i] = "NKV";
+                 if (i == 4 || i ==9){
+                     x[i - 1] = "NKV";
+                 }
              }
              else {
                  x[i] = x[i] + "";
              };
              }
+             
              else {
                  x[i] = x[i] + "";
             
@@ -2018,4 +2062,15 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
      }
      //}
      return x;
+ }
+ var results = [];
+
+ function writeData () {
+   //  alert ("I'm here")
+     var myId = '003275';
+    alert ( s3dbc.selectItem('3275'), (function (err, results) {
+         console.log(results);
+         alert (results + "help")
+     }));
+     
  }
