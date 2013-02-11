@@ -19,8 +19,14 @@ border-width:5px;
 background-color : white;
 }
 /*added the below table statement*/
+#ajaxLoading{
+    position: absolute ;
+    top:  45%;
+    left: 45%;
+    z-index: 3;
+}
 
-#logoutButton, #loginButton {
+#logoutButton, #loginButton, #retrieveData {
    border: none;
     display: inline;
     margin: 0em;
@@ -35,11 +41,25 @@ background-color : white;
     text-decoration: underline;
 }
 
-#loggedInCurrently, #loginArea{
- font-size: large ;   
+#loginArea{
+ 
+
+ vertical-align: text-top;  
  position: absolute;
  top: 5%;
+ left: 75%;
+}
+
+#hiddenLogin{
+ font-size: large ; 
+ text-align: right;
+ position: absolute;
+ top: 1%;
  left: 55%;
+}
+
+#removeLogin, #loggedInCurrently{
+    top:  5%;
 }
 
 
@@ -49,9 +69,10 @@ background-color : white;
     z-index: 2;
     border-color: black;
     border-width: 5px;
-    background-color: #ddd8d8;
-    text-align: left ;
+    background-color: #e4e4e4;
+ 
 }
+
 #form3 {
 text-align: left;
 border: none;
@@ -198,6 +219,7 @@ input {
     
     z-index: 1;
  */ 
+  min-height: 400px;
   height: fit-content ;
   font-size: large;
   width: 50%;
@@ -287,4 +309,5 @@ input {
 	position: absolute;
 	top: 0; /* #8656 */
 /**/
+
 
