@@ -1903,7 +1903,7 @@ function testmyDB(){
                     s3dbc.insertStatement(id[0].item_id, 3695, mac.options[mac.selectedIndex].value, (function () {
                     s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
                         s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
-                            s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
+                            s3dbc.insertStatement(id[0].item_id, 4374, actualRange, (function (err) {
                                 alert("Your data has been added!")
                                 }));
                             }));
