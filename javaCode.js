@@ -15,7 +15,7 @@ if (window.hasOwnProperty('jQuery') === false) {
 var $ = window.jQuery;
 
 var s3dbURL = "https://uab.s3db.org/s3db/";
-var key = "hJLi8Bs3TXAOtbs";
+var key;
 
 //used to determine values in maceration columns
 var step;
@@ -574,6 +574,8 @@ submitLogin.onclick = function () {
     return false;
 };
 submit.onclick = function(){resetUse ()};
+
+//{resetUse ()};
 saveResults.onclick = function () { testmyDB() };
 loginButton.onclick = function () { loadLoginForm() };
 
@@ -605,7 +607,7 @@ var useGA = function (valGA) {
     var gaM = "M" + valGA;
     var gaSD = "SD" + valGA;
 
-
+    
 
     // store my initial guess at GA
 
@@ -811,7 +813,7 @@ var detInRange = function (rangeMeas, myMean, mySD) {
             useGA(GAA);
         }
         else if (detEntry < rangeMeas[0] && GAA > 12) {
-
+           
             GAA--;
             useGA(GAA);
         }
@@ -1151,30 +1153,30 @@ var defineAgeParams = function (detAge) {
     switch (detAge) {
         case "Foot Length":
             useDet = 0;
-            detEntry = parseInt(FL.value);
+            detEntry = parseFloat(FL.value);
 
             break;
 
         case "Body Weight":
             if (liveBorn == false) {
                 useDet = 6;
-                detEntry = parseInt(bodyWeight.value);
+                detEntry = parseFloat(bodyWeight.value);
             }
             else {
                 useDet = 0;
-                detEntry = parseInt(bodyWeight.value);
+                detEntry = parseFloat(bodyWeight.value);
             }
             break;
 
         case "Head Circumference":
             useDet = 3;
-            detEntry = parseInt(HC.value);
+            detEntry = parseFloat(HC.value);
             break;
 
         case "Body Length":
        
             useDet = 2;
-            detEntry = parseInt(CH.value);
+            detEntry = parseFloat(CH.value);
             break;
         case "None":
             useDet = 999;
@@ -1893,8 +1895,8 @@ function pullPercentiles(tableID, origAge, newAge) {
 
 var id = [];
 
-s3dbc.setKey(key);
-s3dbc.setDeployment(s3dbURL);
+//s3dbc.setKey(key);
+//s3dbc.setDeployment(s3dbURL);
 var loader = document.getElementById("ajaxLoading");
 
 function testmyDB(){
@@ -1920,7 +1922,7 @@ function testmyDB(){
                                 s3dbc.insertStatement(id[0].item_id, 3695, mac.options[mac.selectedIndex].value, (function () {
                                     s3dbc.insertStatement(id[0].item_id, 3162, gender, (function (err) {
                                         s3dbc.insertStatement(id[0].item_id, 3197, race, (function (err) {
-                                            s3dbc.insertStatement(id[0].item_id, 3189, actualRange, (function (err) {
+                                            s3dbc.insertStatement(id[0].item_id, 4374, actualRange, (function (err) {
                                                 document.getElementById("ajaxLoading").style.display = "none";
                                                 alert("Your data has been added!")
 
@@ -2065,12 +2067,16 @@ var displayFileInfoByCollectionAndRule=function(collectionID,ruleID){
  }
  var results = [];
 
- function writeData () {
+ function readData () {
    //  alert ("I'm here")
-     var myId = '003275';
-    alert ( s3dbc.selectItem('3275'), (function (err, results) {
+     var myId = "4222";
+     var dataRuleId = "3189";
+    s3dbc.selectItem(4222, (function (err, results) {
          console.log(results);
-         alert (results + "help")
+         
      }));
-     
+     s3dbc.selectStatementsByRuleAndItem(dataRuleId, myId, function (err, results) {
+         console.log(results);
+         console.log(results[0].value.split(","));
+     });
  }
