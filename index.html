@@ -190,9 +190,9 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
         </select></div>
 
     <div style="background: black; height: 10px"></div>
-        <p style="padding-right: 30%"><span style="font-size: large; color: #0000FF">Information for storage (queriable)</span></p>
+        <p style="padding-right: 30%"><span style="font-size: x-large; font-family: 'Baskerville Old Face'; color: #0000FF">Information for storage (queriable)</span></p>
     <div>
-    Disorder (ie: Heterotaxy, Down's): <input type="text" id="disorder" value=" ">
+    Diagnosis: <input type="text" id="disorder" value=" ">
     </div>
     
     <div>
@@ -253,9 +253,15 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
             <h4>Retrieving Data</h4>
             <div>
                 <ol>
-                    <li>Please login first.</li>
                     <li>Click retrieve data or go to <a href="https://uab.s3db.org/s3db/home.php?" style="color: #0000FF" target="_blank">s3db</a>.</li>
-                    <li>Complete data form for retrieval.</li>
+                    <li>Login to the s3db site</li>
+                    <li>Choose projects, click the '+' next to anthropometry.</li>
+                    <li>Click '+' next to case data and choose query.</li>
+                    <li>Determine which parameter you would like search by and enter a value in the box (ex: gender: male)</li>
+                    <li>Click "Search Case Data"</li>
+                    <li>A list of items will be generated. These can be exported to excel.</li>
+                    <li>To expand the data column, highlight the column with 'data', click the data tab in excel, click text to columns.</li>
+                    <li>Choose delimited, 'next', click 'comma', next, finish.</li>
                 
                 </ol>
             </div>
@@ -271,7 +277,7 @@ Adrenals Weight (g): <input type="number" name="Adrenals Weight" id="AW" value="
   </tr>
 </table>
  <br></br>
-        Clean report (remove areas without your input): <input type="checkbox" id="cleanReport"> <br>
+        Clean report (remove areas without your input, click submit afterwards): <input type="checkbox" id="cleanReport"> <br>
         <input type="button" value="Submit" id ="submit" >
         <input type="button" value="Save Results" id ="saveResults" style ="display:none"> 
         <!-- need to have a way to easily tab this over and include bullets -->
