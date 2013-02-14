@@ -1290,6 +1290,9 @@ var defineAgeParams = function (detAge) {
      if (tiny == true) {
          $('#report-output').text("The expected measurements for:" + " " + age.value + " " + "months" + "\r\n" + textString);
      }
+     else if (AB.value != "" && GA.value <= 43){
+          $('#report-output').text("The corrected measurements for:" + " " + GA.value + " " + "weeks" + "\r\n" + textString);
+     }
      else if (GAA <= 99) {
          $('#report-output').text("The expected measurements for:" + " " + GA.value + " " + "weeks" + "\r\n" + textString);
      }
@@ -1482,11 +1485,20 @@ if (tiny == true){
 }
 
 else if (GAA < 99){
-   
-myLabels = ['Actual values', 'Expected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + GAA + " weeks", 'SD', 'Min', 'Max'];
+if (liveBorn == true && GA.value <= 43) {
+    myLabels = ['Actual values', 'Corrected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + GAA + " weeks", 'SD', 'Min', 'Max'];
+}
+else {
+    myLabels = ['Actual values', 'Expected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + GAA + " weeks", 'SD', 'Min', 'Max'];
+}
 }
 else if (GAA == 99){
+if (liveBorn == true && GA.value <= 43) {
+    myLabels = ['Actual values', 'Corrected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + lvAge + " months", 'SD', 'Min', 'Max'];
+}
+else {
     myLabels = ['Actual values', 'Expected Means' + " " + GA.value + " weeks", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + lvAge + " months", 'SD', 'Min', 'Max'];
+}
     }
 else {
     myLabels = ['Actual values', 'Expected Means' + " " + age.value + " months", 'SD', 'Min', 'Max', 'Most Compatible Means' + " " + lvAge + " months", 'SD', 'Min', 'Max'];
