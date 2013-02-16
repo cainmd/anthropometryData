@@ -1525,12 +1525,18 @@ var additionalData = convertTable();
 //var newData = []
 for (var j = 0; j < labels.length; j++) {
 
+   
     additionalData[j] = checkNaN(additionalData[j], myLabels, stopNumber)
-    data.addRow(additionalData[j]);
-    
-       // alert (additionalData[j][1] + " " + typeof additionalData [j][1])
-        //additionalData[j]);
         
+    //added the cleaning option here
+    if (additionalData[j][1] != "" || cleaned == false){
+    
+        data.addRow(additionalData[j]);
+
+
+        // alert (additionalData[j][1] + " " + typeof additionalData [j][1])
+        //additionalData[j]);
+
         // data.setCell(i, 1, {'className': 'bold-font'});
         //data.setRowProperties(j, {'style' : 'italic-purple-font large-font'} );
         if (labels[j] != "Head Circumference (cm)" && labels[i] != "Body Weight (g)" && labels[i] != "Crown Heel Length (cm)") {
@@ -1595,7 +1601,11 @@ for (var j = 0; j < labels.length; j++) {
             }
 
 
-        //setRowProperty(rowIndex, name, value)
+            //setRowProperty(rowIndex, name, value)
+        }
+    }
+    else {
+        
     }
     //area for checking NaN
    
