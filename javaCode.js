@@ -119,7 +119,7 @@ var gender;
 var race;
 
 //
-var labels = ["Foot Length (mm)", "Crown Rump Length (cm)", "Crown Heel Length (cm)", "Head Circumference (cm)", "Chest Circumference (cm)", "Abdominal Circumference (cm)", "Body Weight (g)", "Brain Weight (g)", 
+var labels = ["Foot Length (cm)", "Crown Rump Length (cm)", "Crown Heel Length (cm)", "Head Circumference (cm)", "Chest Circumference (cm)", "Abdominal Circumference (cm)", "Body Weight (g)", "Brain Weight (g)", 
 "Liver Weight (g)", "Lung Weight (g)", "Heart Weight (g)", "Thymus Weight (g)", "Spleen Weight (g)", "Kidney Weight (g)", "Adrenal Weight (g)"];
 
 var actualRange;
