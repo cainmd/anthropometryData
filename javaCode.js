@@ -1930,11 +1930,16 @@ function testmyDB(){
     console.log(insertAge[0] + " " + typeof insertAge[0]);
     console.log(insertAge[1]);
     s3dbc.insertItem(3091, caseNumber.value, (function (err, id) {
+    	if (err != null)
+    	{
+    		alert ("stop")
+    	}
         //will just create a statement for all my data (actualrange)
         console.log(id)
         loader.style.display = "block";
         //console.log(err, id);
         //console.log(actualRange);
+        
         s3dbc.insertStatement(id[0].item_id, 3185, disorder.value, (function () {
             s3dbc.insertStatement(id[0].item_id, 3969, geneticsInfo.value, (function () {
                 s3dbc.insertStatement(id[0].item_id, 3973, culture.value, (function () {
@@ -2005,7 +2010,7 @@ var loginUser = function () {
         if (err !== null) {
 
             console.error("Login failed.", err);
-            alert (Invalid login or password.)
+            alert ("Invalid login or password.")
         } else {
             console.log("Login succeeded.", key);
 
