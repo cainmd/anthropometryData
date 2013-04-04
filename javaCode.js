@@ -1932,13 +1932,13 @@ function testmyDB(){
     s3dbc.insertItem(3091, caseNumber.value, (function (err, id) {
     	if (err != null)
     	{
-    		alert ("stop")
+    		alert ("You do not have permission to add data")
     	}
+    	else
+    	{
         //will just create a statement for all my data (actualrange)
         console.log(id)
-        if (id == undefined){
-        	alert("Error")
-        }
+      
         loader.style.display = "block";
         //console.log(err, id);
         //console.log(actualRange);
@@ -1967,7 +1967,7 @@ function testmyDB(){
             }));
         }));
     }));
-    
+    }    
 
 };
 
