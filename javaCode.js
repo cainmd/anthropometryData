@@ -1936,6 +1936,9 @@ function testmyDB(){
     	}
         //will just create a statement for all my data (actualrange)
         console.log(id)
+        if (id == undefined){
+        	alert("Error")
+        }
         loader.style.display = "block";
         //console.log(err, id);
         //console.log(actualRange);
