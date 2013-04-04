@@ -2005,6 +2005,7 @@ var loginUser = function () {
         if (err !== null) {
 
             console.error("Login failed.", err);
+            alert (Invalid login or password.)
         } else {
             console.log("Login succeeded.", key);
 
